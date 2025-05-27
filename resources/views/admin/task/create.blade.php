@@ -19,9 +19,11 @@
             <x-form-label for="status">Status</x-form-label>
             <select class="custom-select" id="status" name="status" required>
                 <option selected>Choose...</option>
-                <option value="toDo">toDo</option>
-                <option value="inProgress">inProgress</option>
-                <option value="completed">completed</option>
+                @foreach (\App\EnumsTasksStatus::cases() as $status)
+                    <option value="{{ $status->value }}">
+                        {{ ucfirst($status->name) }}
+                    </option>
+                @endforeach
             </select>
             <x-form-error name="status"/>
         </x-form-field>

@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\EnumsTasksStatus;
+Use App\EnumPerPage;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class TaskFilterRequest extends FormRequest
 {
@@ -14,11 +17,11 @@ class TaskFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'nullable|string|max:255',
-            'status' => 'nullable|in:toDo,inProgress,completed',
-            'dateFrom' => 'nullable|date',
-            'dateTo' => 'nullable|date|after_or_equal:dateFrom',
-            'perPage' => 'nullable|integer|in:10,25,50,100',
+            'title' => ['nullable','string','max:255'],
+            'status' => ['nullable',Rule::enum(EnumsTasksStatus::class)],
+            'dateFrom' => ['nullable','date'],
+            'dateTo' => ['nullable','date','after_or_equal:dateFrom'],
+            'perPage' => ['nullable','integer ',Rule::enum(EnumPerPage::class)],
         ];
     }
 }

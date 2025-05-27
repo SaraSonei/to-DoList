@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\RegisterRequest;
-use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
@@ -16,27 +14,15 @@ class AuthController extends Controller
     }
     public function store(RegisterRequest $request)
     {
-
+        $data = $request->validated();
         $user = User::create([
-            'firstName' => $request->firstName,
-            'lastName' => $request->lastName,
-            'email' => $request->email,
-            'password' => $request->password,
+            'firstName' => $data['firstName'],
+            'lastName' => $data['lastName'],
+            'email' => $data['email'],
+            'password' => $data['password'],
         ]);
 
        Auth::login($user);
        return redirect('/admin');
-
-
-
-
-        return response()->json(['message' => 'Register successfully'], 201);
-        //return view('auth.login');
-
-    }
-    public function login(LoginRequest $request)
-    {
-        $user = User::where('email', $request->email)->first();
-
     }
 }

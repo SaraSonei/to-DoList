@@ -19,7 +19,7 @@ return new class extends Migration
             $table->char('title', 255);
             $table->text('description')->nullable();
             $table->enum('status', ['toDo' ,'inProgress' ,'completed'])->default('toDo');
-            $table->timestamp('completionDate')->nullable();
+            $table->timestamp('completionDate');
             $table->softDeletes();
             $table->timestamps();
         });

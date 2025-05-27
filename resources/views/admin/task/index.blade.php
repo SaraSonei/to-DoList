@@ -19,10 +19,11 @@
                             <div class="col-sm-12 col-md-1">
                                 <div class="dataTables_length" id="dataTable_length">
                                         <select name="perPage" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm">
-                                            <option value="10" {{ request('perPage') == 10 ? 'selected' : '' }}>10</option>
-                                            <option value="25" {{ request('perPage') == 25 ? 'selected' : '' }}>25</option>
-                                            <option value="50" {{ request('perPage') == 50 ? 'selected' : '' }}>50</option>
-                                            <option value="100" {{ request('perPage') == 100 ? 'selected' : '' }}>100</option>
+                                            @foreach (\App\EnumPerPage::cases() as $num)
+                                                <option value="{{ $num->value }}" {{ request('status') === $num->value ? 'selected' : '' }}>
+                                                    {{ ucfirst($num->value) }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                 </div>
                             </div>
@@ -31,9 +32,11 @@
                                     <input type="search" class="form-control form-control-sm col-md-2" name="title" placeholder="title" aria-controls="dataTable" style="display: inline" value="{{ request('title') }}">
                                     <select name="status" aria-controls="dataTable" class="col-md-2 custom-select custom-select-sm form-control form-control-sm" style="display: inline">
                                         <option value="">All Statuses</option>
-                                        <option value="toDo" {{ request('status') == 'toDo' ? 'selected' : '' }}>toDo</option>
-                                        <option value="inProgress" {{ request('status') == 'inProgress' ? 'selected' : '' }}>inProgress</option>
-                                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>completed</option>
+                                            @foreach (\App\EnumsTasksStatus::cases() as $status)
+                                                <option value="{{ $status->value }}" {{ request('status') === $status->value ? 'selected' : '' }}>
+                                                    {{ ucfirst($status->name) }}
+                                                </option>
+                                            @endforeach
                                     </select>
                                     <label>From : </label> <input type="date" onload="getDate()" name="dateFrom" value="{{ old('dateFrom', $dateFrom) }}"  class="date col-md-2  form-control form-control-sm" style="display: inline">
                                     <label>To : </label>        <input type="date" onload="getDate()" name="dateTo" value="{{ old('dateTo', $dateTo) }}" class="date col-md-2  form-control form-control-sm" style="display: inline">
