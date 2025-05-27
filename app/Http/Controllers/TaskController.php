@@ -69,15 +69,6 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
-    {
-        //
-        dd('shoe');
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Task $task)

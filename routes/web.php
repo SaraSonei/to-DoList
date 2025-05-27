@@ -36,8 +36,6 @@ Route::prefix('admin')->controller(TaskController::class)->group(function () {
 //        ->can('edit', 'tasks');
 
     Route::patch('/tasks/{task}', 'update')->name('tasks.update');
-
-    Route::get('/tasks/{task}', 'show');
     Route::delete('/tasks/{task}', 'destroy');
 });
 
