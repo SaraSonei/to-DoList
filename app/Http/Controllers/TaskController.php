@@ -18,7 +18,8 @@ class TaskController extends Controller
     public function index(TaskFilterRequest $request)
     {
 
-       // dd($request->all());
+        $dateFrom = $request->filled('dateFrom') ? $request->dateFrom : now()->toDateString();
+        $dateTo = $request->filled('dateTo') ? $request->dateTo : now()->toDateString();
 
         $query = Task::query()
             ->where('user_id', auth()->id());
@@ -30,18 +31,20 @@ class TaskController extends Controller
             $query->where('status', $request->status);
         }
 
-        if ($request->filled('dateFrom')) {
-            $query->whereDate('completionDate', '>=', $request->dateFrom);
-        }
+        $query->whereBetween('completionDate', [$dateFrom, $dateTo]);
 
-        if ($request->filled('dateTo')) {
-            $query->whereDate('completionDate', '<=', $request->dateTo);
-        }
+//        if ($request->filled('dateFrom')) {
+//            $query->whereDate('completionDate', '>=', $request->dateFrom);
+//        }
+//
+//        if ($request->filled('dateTo')) {
+//            $query->whereDate('completionDate', '<=', $request->dateTo);
+//        }
 
         $query->orderBy('completionDate', 'desc');
 
        $tasks = $query->latest()->simplepaginate($request->perPage ?? 10)->withQueryString();
-        return view('admin.task.index', compact('tasks'));
+        return view('admin.task.index', compact('tasks' ,'dateFrom', 'dateTo'));
     }
 
     /**

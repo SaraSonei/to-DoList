@@ -31,12 +31,14 @@ Route::prefix('admin')->controller(TaskController::class)->group(function () {
     Route::get('/tasks/create', 'create');
     Route::post('/tasks', 'store')->name('tasks.store');
 
-    Route::get('/tasks/{task}/edit', 'edit');
+    Route::get('/tasks/{task}/edit', 'edit')
+        ->middleware('can:update,task');
 //        ->middleware('auth')
 //        ->can('edit', 'tasks');
 
     Route::patch('/tasks/{task}', 'update')->name('tasks.update');
-    Route::delete('/tasks/{task}', 'destroy');
+    Route::delete('/tasks/{task}', 'destroy')
+        ->middleware('can:update,task');
 });
 
 

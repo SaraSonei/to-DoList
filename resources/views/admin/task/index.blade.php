@@ -35,13 +35,14 @@
                                         <option value="inProgress" {{ request('status') == 'inProgress' ? 'selected' : '' }}>inProgress</option>
                                         <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>completed</option>
                                     </select>
-                                    <label>From : </label> <input type="date" onload="getDate()" name="dateFrom" value="{{ request('dateFrom') }}" class="date col-md-2  form-control form-control-sm" style="display: inline">
-                                    <label>To : </label>        <input type="date" onload="getDate()" name="dateTo" value="{{ request('dateTo') }}" class="date col-md-2  form-control form-control-sm" style="display: inline">
+                                    <label>From : </label> <input type="date" onload="getDate()" name="dateFrom" value="{{ old('dateFrom', $dateFrom) }}"  class="date col-md-2  form-control form-control-sm" style="display: inline">
+                                    <label>To : </label>        <input type="date" onload="getDate()" name="dateTo" value="{{ old('dateTo', $dateTo) }}" class="date col-md-2  form-control form-control-sm" style="display: inline">
                                     <input type="submit" name="search" value="search" class="btn btn-primary col-md-1 form-control form-control-sm" style="display: inline"/>
                                 </div>
                             </div>
                             </div>
                         </form>
+                    @if ($tasks->count())
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                         <tr>
@@ -102,6 +103,11 @@
                     <div class="d-flex mt-4">
                         {{$tasks->links()}}
                     </div>
+                    @else
+                        <div class="text-center text-gray-600 mt-4">
+                            No Data!
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -110,10 +116,3 @@
     </div>
     <!-- /.container-fluid -->
 </x-layout>
-<script>
-    function getDate(){
-        var today = new Date();
-        document.getElementsByClassName("date").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
-    }
-
-</script>
