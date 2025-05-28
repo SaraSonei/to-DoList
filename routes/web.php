@@ -33,12 +33,12 @@ Route::prefix('admin')->controller(TaskController::class)->group(function () {
 
     Route::get('/tasks/{task}/edit', 'edit')
         ->middleware('can:update,task');
-//        ->middleware('auth')
-//        ->can('edit', 'tasks');
 
-    Route::patch('/tasks/{task}', 'update')->name('tasks.update');
-    Route::delete('/tasks/{task}', 'destroy')
+    Route::patch('/tasks/{task}', 'update')->name('tasks.update')
         ->middleware('can:update,task');
+
+    Route::delete('/tasks/{task}', 'destroy')
+        ->middleware('can:delete,task');
 });
 
 

@@ -21,4 +21,24 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function scopeOwnedBy($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    public function scopeFilterTitle($query, $title)
+    {
+        return $query->when($title, fn($q) => $q->where('title', 'like', "%{$title}%"));
+    }
+
+    public function scopeFilterStatus($query, $status)
+    {
+        return $query->when($status, fn($q) => $q->where('status', $status));
+    }
+
+    public function scopeCompletionBetween($query, $from, $to)
+    {
+        return $query->whereBetween('completionDate', [$from, $to]);
+    }
+
 }

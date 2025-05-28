@@ -29,12 +29,19 @@
         </x-form-field>
         <x-form-field>
             <x-form-label for="completionDate">Completion Date</x-form-label>
-            <x-form-input name="completionDate" type="date" id="completionDate" placeholder="pick a date" value="{{ $task->completionDate ? \Carbon\Carbon::parse($task->completionDate)->format('Y-m-d') : '' }}"/>
+            @if(isJalali())
+                <x-form-input name="completionDate" type="text" data-jdp id="completionDate"  value="{{  formatDateForDisplay($task->completionDate)  }}" placeholder="Click on me! choose a date  -  1403/03/10" />
+
+            @else
+                <x-form-input name="completionDate" type="date" id="completionDate" value="{{ \Carbon\Carbon::parse($task->completionDate)->format('Y-m-d') }}" />
+            @endif
+
+{{--            <x-form-input name="completionDate" type="date" id="completionDate" placeholder="pick a date" value="{{ $task->completionDate ? \Carbon\Carbon::parse($task->completionDate)->format('Y-m-d') : '' }}"/>--}}
             <x-form-error name="completionDate"/>
         </x-form-field>
         <hr>
         <x-form-button>Update</x-form-button>
-        <x-form-button type="button" class="btn btn-secondary" >Cancel</x-form-button>
+        <a class="btn-user btn-block btn btn-secondary" href="/admin/tasks">Cancel</a>
     </form>
 
 </x-layout>

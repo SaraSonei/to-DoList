@@ -19,8 +19,8 @@ class TaskFilterRequest extends FormRequest
         return [
             'title' => ['nullable','string','max:255'],
             'status' => ['nullable',Rule::enum(EnumsTasksStatus::class)],
-            'dateFrom' => ['nullable','date'],
-            'dateTo' => ['nullable','date','after_or_equal:dateFrom'],
+            'dateFrom' => ['nullable','string'],
+            'dateTo' => ['nullable','string','after_or_equal:dateFrom'],
             'perPage' => ['nullable','integer ',Rule::enum(EnumPerPage::class)],
         ];
     }

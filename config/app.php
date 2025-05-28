@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'datepicker_locale' => env('DATEPICKER_LOCALE', 'gregorian'),
+
 ];

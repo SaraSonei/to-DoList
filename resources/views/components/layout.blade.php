@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -112,6 +113,20 @@
 <!-- Page level custom scripts -->
 {{--<script src="{{ asset('js/demo/chart-area-demo.js')}}"></script>--}}
 {{--<script src="{{ asset('js/demo/chart-pie-demo.js')}}"></script>--}}
+@if(isJalali())
+    <link rel="stylesheet" href="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css">
+    <script type="text/javascript" src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"></script>
+
+    <script>
+        jalaliDatepicker.startWatch({
+            minDate: "attr",
+            maxDate: "attr",
+            separatorChars: {
+                date: '-'
+            }
+        });
+    </script>
+@endif
 
 </body>
 </html>

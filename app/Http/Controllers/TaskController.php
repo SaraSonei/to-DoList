@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\EnumPerPage;
 use App\Models\Task;
-use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
 use App\Http\Requests\TaskFilterRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use App\EnumsTasksStatus;
+use Morilog\Jalali\Jalalian;
 
 class TaskController extends Controller
 {
@@ -20,25 +18,29 @@ class TaskController extends Controller
     public function index(TaskFilterRequest $request)
     {
         $data = $request->validated();
-        $dateFrom = $request->filled('dateFrom') ? $data['dateFrom'] : now()->toDateString();
-        $dateTo = $request->filled('dateTo') ? $data['dateTo'] : now()->toDateString();
+
+        $toDay =  now()->toDateString();
+        $tomorrow =  now()->add('1 day')->toDateString();
+
+        $dateFrom = $request->filled('dateFrom') ? $this->checkCompletionDate($data['dateFrom'] ): $toDay;
+        $dateTo = $request->filled('dateTo') ? $this->checkCompletionDate($data['dateTo']) : $tomorrow;
+
         $perPage = $request->filled('perPage') ? $data['perPage'] : EnumPerPage::TEN->value;
-        $query = Task::query()
-            ->where('user_id', auth()->id());
 
-        if ($request->filled('title')) {
-            $query->where('title', 'like', '%' . $data['title'] . '%');
-        }
-        if ($request->filled('status')) {
-            $query->where('status', $data['status']);
-        }
+        $tasks = Task::query()
+            ->ownedBy(auth()->id())
+            ->filterTitle($data['title'] ?? null)
+            ->filterStatus($data['status'] ?? null)
+            ->completionBetween($dateFrom, $dateTo)
+            ->orderByDesc('completionDate')
+            ->latest()
+            ->simplePaginate($perPage)
+            ->withQueryString();
 
-        $query->whereBetween('completionDate', [$dateFrom, $dateTo]);
+        $dateFrom = formatDateForDisplay($dateFrom);
+        $dateTo = formatDateForDisplay($dateTo);
 
-        $query->orderBy('completionDate', 'desc');
-
-       $tasks = $query->latest()->simplepaginate($perPage)->withQueryString();
-        return view('admin.task.index', compact('tasks' ,'dateFrom', 'dateTo'));
+       return view('admin.task.index', compact('tasks' ,'dateFrom', 'dateTo'));
     }
 
     /**
@@ -55,7 +57,8 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         $data = $request->validated();
-        $completionDate = $request->filled('completionDate') ? $data['completionDate'] : now()->toDateString();
+
+        $completionDate = $this->checkCompletionDate($data['completionDate'] ?? null);
         $status = $request->filled('status') ? $data['status'] : EnumsTasksStatus::TODO;
         Task::create([
             'title' => $data['title'],
@@ -65,7 +68,7 @@ class TaskController extends Controller
             'completionDate' => $completionDate,
         ]);
 
-        return redirect(route('tasks.index'));
+        return redirect('/admin/tasks');
     }
 
     /**
@@ -73,7 +76,6 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        Gate::authorize('update', $task);
         return view('admin.task.edit', compact('task'));
     }
 
@@ -83,7 +85,7 @@ class TaskController extends Controller
     public function update(TaskRequest $request, Task $task)
     {
         $data = $request->validated();
-        $completionDate = $request->filled('completionDate') ? $data['completionDate'] : now()->toDateString();
+        $completionDate = $this->checkCompletionDate($data['completionDate'] ?? null);
         $task->update([
             'title' => $data['title'],
             'user_id' => Auth::user()->id,
@@ -101,8 +103,20 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        Gate::authorize('update', $task);
         $task->delete();
-        return redirect()->route('tasks.index');
+        return redirect('/admin/tasks');
     }
+
+    public function checkCompletionDate(?string $inputDate = null): string
+    {
+        if (isJalali()) {
+            $persianDate = $inputDate ?? Jalalian::now()->format('Y-m-d');
+            return Jalalian::fromFormat('Y-m-d', $persianDate)
+                ->toCarbon()
+                ->toDateString();
+        }
+
+        return $inputDate ?? now()->toDateString();
+    }
+
 }

@@ -38,8 +38,14 @@
                                                 </option>
                                             @endforeach
                                     </select>
-                                    <label>From : </label> <input type="date" onload="getDate()" name="dateFrom" value="{{ old('dateFrom', $dateFrom) }}"  class="date col-md-2  form-control form-control-sm" style="display: inline">
-                                    <label>To : </label>        <input type="date" onload="getDate()" name="dateTo" value="{{ old('dateTo', $dateTo) }}" class="date col-md-2  form-control form-control-sm" style="display: inline">
+                                    @if(isJalali())
+                                        <label>From : </label> <input type="text"  data-jdp name="dateFrom" value="{{ old('dateFrom', $dateFrom) }}"  class="date col-md-2  form-control form-control-sm" style="display: inline">
+                                        <label>To : </label>  <input type="text"  data-jdp name="dateTo" value="{{ old('dateTo', $dateTo) }}" class="date col-md-2  form-control form-control-sm" style="display: inline">
+                                    @else
+                                        <label>From : </label> <input type="date"  name="dateFrom" value="{{ old('dateFrom', $dateFrom) }}"  class="date col-md-2  form-control form-control-sm" style="display: inline">
+                                        <label>To : </label>  <input type="date"  name="dateTo" value="{{ old('dateTo', $dateTo) }}" class="date col-md-2  form-control form-control-sm" style="display: inline">
+                                    @endif
+
                                     <input type="submit" name="search" value="search" class="btn btn-primary col-md-1 form-control form-control-sm" style="display: inline"/>
                                 </div>
                             </div>
@@ -71,7 +77,7 @@
                                 <td>{{$task->title}}</td>
                                 <td>{{$task->description}}</td>
                                 <td>{{$task->status}}</td>
-                                <td>{{ $task->completionDate ? \Carbon\Carbon::parse($task->completionDate)->format('Y-m-d') : '' }}</td>
+                                <td>{{ formatDateForDisplay($task->completionDate) }}</td>
                                 <td>
                                     <a class="btn btn-primary btn-circle" href="/admin/tasks/{{$task->id}}/edit" role="button"><i class="fa fa-edit fa-sm fa-fw mr-2 text-white-50" aria-hidden="true"></i></a>
                                     <a class="btn btn-danger btn-circle" href="#" role="button" data-toggle="modal" data-target="#deleteModal{{$task->id}}"><i class="fa fa-trash fa-sm fa-fw mr-2 text-white-50" aria-hidden="true"></i></a>

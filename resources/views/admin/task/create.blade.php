@@ -27,14 +27,24 @@
             </select>
             <x-form-error name="status"/>
         </x-form-field>
+
         <x-form-field>
             <x-form-label for="completionDate">Completion Date</x-form-label>
-            <x-form-input name="completionDate" type="date" id="completionDate" placeholder="pick a date" />
+
+            @if(isJalali())
+                <x-form-input name="completionDate" type="text" data-jdp id="completionDate"  value="{{ old('completionDate') }}" placeholder="Click on me! choose a date  -  1403/03/10" />
+
+            @else
+                <x-form-input name="completionDate" type="date" id="completionDate" value="{{ old('completionDate') }}" />
+            @endif
+
+{{--            <x-form-input name="completionDate" type="date" id="completionDate" placeholder="pick a date" />--}}
             <x-form-error name="completionDate"/>
         </x-form-field>
         <hr>
         <x-form-button>Save</x-form-button>
-        <x-form-button type="button" class="btn btn-secondary" >Cancel</x-form-button>
+        <a class="btn-user btn-block btn btn-secondary" href="/admin/tasks">Cancel</a>
     </form>
 
 </x-layout>
+
