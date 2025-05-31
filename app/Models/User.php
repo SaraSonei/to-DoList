@@ -4,12 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\EnumRoleName;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Task;
-use App\Models\Role;
+
 
 class User extends Authenticatable
 {
@@ -58,42 +59,28 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class , 'role_user')
+            ->withTimestamps();
     }
-
-    public function isSuperAdmin(): bool
+    public function permissions()
     {
-        return $this->hasRole(EnumRoleName::SUPERADMIN);
+        return $this->belongsToMany(Permission::class , 'permission_user')
+            ->withTimestamps();
     }
 
-    public function isAdmin(): bool
+    public function hasPermission(string $permissionName): bool
     {
-        return $this->hasRole(EnumRoleName::ADMIN);
+        return $this->permissions()->where('name', $permissionName)->exists();
     }
 
-    public function isUSer(): bool
+    public function hasRole($roleName)
     {
-        return $this->hasRole(EnumRoleName::USER);
+        return $this->roles()->where('name', $roleName)->exists();
     }
 
-    public function hasRole(EnumRoleName $role): bool
+    public function getFullNameAttribute()
     {
-        return $this->roles()->where('name', $role->value)->exists();
+        return "{$this->firstName} {$this->lastName}";
     }
-
-    public function permissions(): array
-    {
-        return $this->roles()->with('permissions')->get()
-            ->map(function ($role) {
-                return $role->permissions->pluck('name');
-            })->flatten()->values()->unique()->toArray();
-    }
-
-    public function hasPermission(string $permission): bool
-    {
-        return in_array($permission, $this->permissions(), true);
-    }
-
-
 
 }

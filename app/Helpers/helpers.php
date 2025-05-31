@@ -10,7 +10,9 @@ if (!function_exists('formatDateForDisplay')) {
             ? Jalalian::fromDateTime($date)->format('Y-m-d')
             : Carbon::parse($date)->format('Y-m-d');
     }
+}
 
+if (!function_exists('isJalali')) {
     function isJalali(): bool
     {
         return config('app.datepicker_locale') === 'jalali';

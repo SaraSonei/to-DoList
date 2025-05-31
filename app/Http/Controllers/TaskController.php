@@ -40,7 +40,7 @@ class TaskController extends Controller
         $dateFrom = formatDateForDisplay($dateFrom);
         $dateTo = formatDateForDisplay($dateTo);
 
-       return view('admin.task.index', compact('tasks' ,'dateFrom', 'dateTo'));
+       return view('tasks.index', compact('tasks' ,'dateFrom', 'dateTo'));
     }
 
     /**
@@ -48,7 +48,8 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('admin.task.create');
+
+        return view('tasks.create');
     }
 
     /**
@@ -68,7 +69,7 @@ class TaskController extends Controller
             'completionDate' => $completionDate,
         ]);
 
-        return redirect('/admin/tasks');
+        return redirect(route('tasks.index'));
     }
 
     /**
@@ -76,7 +77,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('admin.task.edit', compact('task'));
+        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -95,7 +96,7 @@ class TaskController extends Controller
         ]);
 
 
-        return redirect('/admin/tasks');
+        return redirect(route('tasks.index'));
     }
 
     /**
@@ -104,7 +105,7 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-        return redirect('/admin/tasks');
+        return redirect(route('tasks.index'));
     }
 
     public function checkCompletionDate(?string $inputDate = null): string

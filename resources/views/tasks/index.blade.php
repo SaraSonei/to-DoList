@@ -9,7 +9,7 @@
         <div class="card shadow mb-4">
             <div class="card-header d-sm-flex  py-3 align-items-center justify-content-between mb-4">
                 <h6 class="m-0 font-weight-bold text-primary">Task list</h6>
-                <a href="/admin/tasks/create" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create new task</a>
+                <a href="{{route('tasks.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create new task</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive" style="overflow-x: inherit;">
@@ -79,7 +79,7 @@
                                 <td>{{$task->status}}</td>
                                 <td>{{ formatDateForDisplay($task->completionDate) }}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-circle" href="/admin/tasks/{{$task->id}}/edit" role="button"><i class="fa fa-edit fa-sm fa-fw mr-2 text-white-50" aria-hidden="true"></i></a>
+                                    <a class="btn btn-primary btn-circle" href="{{route('tasks.edit' , $task->id)}}" role="button"><i class="fa fa-edit fa-sm fa-fw mr-2 text-white-50" aria-hidden="true"></i></a>
                                     <a class="btn btn-danger btn-circle" href="#" role="button" data-toggle="modal" data-target="#deleteModal{{$task->id}}"><i class="fa fa-trash fa-sm fa-fw mr-2 text-white-50" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
@@ -95,7 +95,7 @@
                                         </div>
                                         <div class="modal-body">Select "Delete" below if you are ready to remove your task  ({{$task->title}}).</div>
                                         <div class="modal-footer">
-                                            <form action="/admin/tasks/{{$task->id}}" method="POST">
+                                            <form action="{{route('tasks.destroy' , $task->id)}}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>

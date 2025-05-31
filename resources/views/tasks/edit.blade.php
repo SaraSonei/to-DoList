@@ -2,7 +2,7 @@
     <x-slot:heading>
         Edit Task : {{$task->title}}
     </x-slot:heading>
-    <form method="POST" action="/admin/tasks/{{$task->id}}">
+    <form method="POST" action="{{route('tasks.update' , $task->id)}}">
         @csrf
         @method('PATCH')
         <x-form-field>
