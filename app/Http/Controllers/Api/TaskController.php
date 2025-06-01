@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\EnumPerPage;
 use App\EnumsTasksStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TasksResource;
@@ -17,16 +18,15 @@ class TaskController extends Controller
     {
         $data = $request->validated();
 
-
         $toDay = time();
         $tomorrow =  strtotime('tomorrow');
+        $perPage = $request->filled('perPage') ? $data['perPage'] : EnumPerPage::TEN->value;
 
         $date_From = $request->filled('dateFrom') ? $data['dateFrom'] : $toDay;
         $date_To = $request->filled('dateTo') ? $data['dateTo'] : $tomorrow;
 
         $dateFrom =  date('Y-m-d', $date_From);
         $dateTo =  date('Y-m-d', $date_To);
-
 
         $tasks = Task::query()
             ->ownedBy(auth()->user()->id)
@@ -35,12 +35,13 @@ class TaskController extends Controller
             ->completionBetween($dateFrom, $dateTo)
             ->orderByDesc('completionDate')
             ->latest()
+            ->offset(0)
+            ->limit($perPage)
             ->get();
-            //->withQueryString();
+
 
         return TasksResource::collection($tasks);
     }
-
 
     public function Store (StoreTaskRequest $request)
     {

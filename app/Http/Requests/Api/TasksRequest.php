@@ -21,6 +21,7 @@ class TasksRequest extends FormRequest
             'status' => ['nullable',Rule::enum(EnumsTasksStatus::class)],
             'dateFrom' => ['nullable','string'],
             'dateTo' => ['nullable','string'],
+            'perPage' => ['nullable','integer ',Rule::enum(EnumPerPage::class)],
         ];
     }
 }

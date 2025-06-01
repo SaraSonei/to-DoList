@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\EnumPerPage;
 use Illuminate\Foundation\Http\FormRequest;
 use App\EnumsTasksStatus;
 use Illuminate\Validation\Rule;
@@ -16,10 +17,11 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string','min:3' ,'max:255'],
+            'title' => ['nullable', 'string','min:3' ,'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
             'status' => ['required', Rule::enum(EnumsTasksStatus::class)],
             'completionDate' => ['nullable', 'string'],
+            'perPage' => ['nullable','integer ',Rule::enum(EnumPerPage::class)],
         ];
     }
     public function messages(): array
