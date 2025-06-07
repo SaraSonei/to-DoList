@@ -9,6 +9,7 @@ use App\Http\Requests\TaskFilterRequest;
 use Illuminate\Support\Facades\Auth;
 use App\EnumsTasksStatus;
 use Morilog\Jalali\Jalalian;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -48,7 +49,6 @@ class TaskController extends Controller
      */
     public function create()
     {
-
         return view('tasks.create');
     }
 
@@ -58,7 +58,6 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         $data = $request->validated();
-
         $completionDate = $this->checkCompletionDate($data['completionDate'] ?? null);
         $status = $request->filled('status') ? $data['status'] : EnumsTasksStatus::TODO;
         Task::create([
@@ -77,6 +76,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
+        Gate::authorize('update', $task);
         return view('tasks.edit', compact('task'));
     }
 
@@ -85,6 +85,7 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
+        Gate::authorize('update', $task);
         $data = $request->validated();
         $completionDate = $this->checkCompletionDate($data['completionDate'] ?? null);
         $task->update([
@@ -104,6 +105,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+        Gate::authorize('delete', $task);
         $task->delete();
         return redirect(route('tasks.index'));
     }

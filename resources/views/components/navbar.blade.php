@@ -26,17 +26,21 @@
     </li>
 
     <div class="topbar-divider d-none d-sm-block"></div>
+    @php
+        $user = Auth::guard('admin')->check() ? Auth::guard('admin')->user() :
+                (Auth::guard('web')->check() ? Auth::guard('web')->user() : null);
+    @endphp
 
+    @if ($user)
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{auth()->user()->getFullNameAttribute()}}</span>
+            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{$user->getFullNameAttribute()}}</span>
             <img class="img-profile rounded-circle"
                  src="img/undraw_profile.svg">
         </a>
         <!-- Dropdown - User Information -->
-        @auth()
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -44,8 +48,8 @@
                         Logout</x-form-button>
                 </div>
             </form>
-        @endauth
 
     </li>
+    @endif
 
 </ul>

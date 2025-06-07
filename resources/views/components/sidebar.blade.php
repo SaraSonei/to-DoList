@@ -11,29 +11,31 @@
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span>
     </x-nav-link>
+    @php
+        $user = Auth::guard('admin')->check() ? Auth::guard('admin')->user() :
+                (Auth::guard('web')->check() ? Auth::guard('web')->user() : null);
+    @endphp
 
-    @if (auth()->check())
-        @if (auth()->user()->hasRole('admin'))
-            @if (auth()->user()->hasPermission('view.admins'))
-                <x-nav-link href="{{ route('admin.list') }}" :active="request()->is('users')">
-                    <i class="fas fa-fw fa-table"></i>
+    @if ($user)
+        @if ($user->isAdmin())
+            @if ($user->hasPermission('view.admins'))
+                <x-nav-link href="{{ route('admins.list') }}" :active="request()->is('admins*')">
+                    <i class="fas fa-fw fa-users-cog"></i>
                     <span>Admins</span>
                 </x-nav-link>
             @endif
-            @if (auth()->user()->hasPermission('view.all.users'))
-                <x-nav-link href="{{ route('users.list') }}" :active="request()->is('users')">
-                    <i class="fas fa-fw fa-table"></i>
+            @if ($user->hasPermission('view.all.users'))
+                <x-nav-link href="{{ route('users.list') }}" :active="request()->is('users*')">
+                    <i class="fas fa-fw fa-users"></i>
                     <span>Users</span>
                 </x-nav-link>
             @endif
-        @endif
-        @if(auth()->user()->hasRole('user'))
-            <x-nav-link href="{{ route('tasks.index') }}" :active="request()->is('tasks')">
-                <i class="fas fa-fw fa-table"></i>
+        @elseif ($user->isUser())
+            <x-nav-link href="{{ route('tasks.index') }}" :active="request()->is('tasks*')">
+                <i class="fas fa-fw fa-tasks"></i>
                 <span>Tasks</span>
             </x-nav-link>
         @endif
-
     @endif
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

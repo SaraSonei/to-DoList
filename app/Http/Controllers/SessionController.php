@@ -22,9 +22,22 @@ class SessionController extends Controller
             throw ValidationException::withMessages(['email' => 'The provided credentials do not match our records']);
         }
 
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => 'You are not allowed to enter this way.',
+            ]);
+        }
+
+
         $request->session()->regenerate();
 
-        return redirect('/admin');
+        return redirect('/dashboard');
 
     }
 

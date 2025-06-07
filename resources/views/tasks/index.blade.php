@@ -9,7 +9,8 @@
         <div class="card shadow mb-4">
             <div class="card-header d-sm-flex  py-3 align-items-center justify-content-between mb-4">
                 <h6 class="m-0 font-weight-bold text-primary">Task list</h6>
-                <a href="{{route('tasks.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create new task</a>
+                    <a href="{{route('tasks.create')}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create new task</a>
+
             </div>
             <div class="card-body">
                 <div class="table-responsive" style="overflow-x: inherit;">
@@ -73,6 +74,7 @@
                         </tfoot>
                         <tbody>
                         @foreach($tasks as $task)
+                            @can('view', $task)
                             <tr>
                                 <td>{{$task->title}}</td>
                                 <td>{{$task->description}}</td>
@@ -105,8 +107,8 @@
                                     </div>
                                 </div>
                             </div>
+                            @endcan
                         @endforeach
-
                         </tbody>
                     </table>
                     <div class="d-flex mt-4">

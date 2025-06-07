@@ -56,15 +56,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class);
     }
-
     public function roles()
     {
-        return $this->belongsToMany(Role::class , 'role_user')
+        return $this->belongsToMany(Role::class , 'role_user' , 'user_id' , 'role_id')
             ->withTimestamps();
     }
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class , 'permission_user')
+        return $this->belongsToMany(Permission::class , 'permission_user', 'user_id' , 'permission_id')
             ->withTimestamps();
     }
 
@@ -82,5 +81,16 @@ class User extends Authenticatable
     {
         return "{$this->firstName} {$this->lastName}";
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->roles()->where('name', 'admin')->exists();
+    }
+
+    public function isUser(): bool
+    {
+        return $this->hasRole('user');
+    }
+
 
 }

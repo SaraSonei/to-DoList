@@ -11,6 +11,16 @@ class TaskPolicy
     /**
      * Determine whether the user can view any models.
      */
+    public function view(User $user , $task)
+    {
+        return $user->id === $task->user_id;
+    }
+//
+//    public function create(User $user)
+//    {
+//        return $user->id === in_array($user->id , [1,2,3]);
+//    }
+
     public function update(User $user, Task $task)
     {
         return $user->id === $task->user_id;
@@ -20,4 +30,6 @@ class TaskPolicy
     {
         return $user->id === $task->user_id;
     }
+
+
 }
