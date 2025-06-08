@@ -36,10 +36,8 @@ class AdminPermissionTest extends TestCase
         $admin = User::factory()->create();
 
         $adminRole = Role::create(['name' => 'admin']);
-        //$viewAdminsPermission = Permission::create(['name' => 'view.admins']);
 
         $admin->roles()->attach($adminRole);
-        //$admin->permissions()->attach($viewAdminsPermission);
 
         $this->actingAs($admin, 'admin');
 
@@ -70,10 +68,8 @@ class AdminPermissionTest extends TestCase
         $admin = User::factory()->create();
 
         $adminRole = Role::create(['name' => 'admin']);
-        //$viewAdminsPermission = Permission::create(['name' => 'view.all.users']);
 
         $admin->roles()->attach($adminRole);
-        //$admin->permissions()->attach($viewAdminsPermission);
 
         $this->actingAs($admin, 'admin');
 
