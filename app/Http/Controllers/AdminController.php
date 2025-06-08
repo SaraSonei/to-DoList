@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,14 +14,12 @@ class AdminController extends Controller
         return view('admin.auth.login', compact('errors'));
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
 
-        if (Auth::guard('admin')->attempt($credentials)) {
+        $data = $request->validated();
+
+        if (Auth::guard('admin')->attempt($data)) {
             $user = Auth::guard('admin')->user();
 
             if (!$user->isAdmin()) {
